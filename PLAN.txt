@@ -1,0 +1,40 @@
+=============================================================================
+DATA COLLECTION PLAN: F1 Tyre Degradation vs. Aggression
+=============================================================================
+
+/f1_tyre_thesis
+│
+├── /f1_cache/                      
+│   # FastF1 automated local cache. Stores gigabytes of raw API data. 
+│   # Do not manually edit or push to GitHub.
+│
+├── /scripts/                       
+│   # Python files to automate data extraction and telemetry calculations.
+│   ├── 01_longitudinal_extract.py  # Measures throttle aggression out of traction zones
+│   ├── 02_lateral_extract.py       # Measures steering/speed aggression in high-speed corners
+│   ├── 03_thermal_extract.py       # Measures braking/slip aggression in high-heat tracks
+│   ├── 04_control_extract.py       # Extracts baseline data from zero-degradation street circuits
+│   └── utils_fuel_math.py          # Shared functions for the 0.3s/10kg weight penalty correction
+│
+├── /raw_data_exports/              
+│   # Unmodified DataFrames exported directly from FastF1 as CSVs.
+│   # Columns: LapTime, Compound, TyreLife, Stint, TrackStatus, TrackTemp, PitInOut
+│   ├── bahrain_2023-2025_raw.csv   # Target: Rear-tyre traction
+│   ├── barcelona_2023-2025_raw.csv # Target: Front-tyre lateral energy
+│   ├── suzuka_2023-2025_raw.csv    # Target: Front-tyre lateral energy
+│   ├── cota_2023-2025_raw.csv      # Target: Thermal & strategic variance
+│   ├── silverstone_23-25_raw.csv   # Target: Thermal & strategic variance
+│   └── monaco_2023-2025_raw.csv    # Control Group: Zero degradation
+│
+├── /processed_data/                
+│   # Cleaned datasets ready for statistical modeling and regression analysis.
+│   # Filtered for dry weather, green flags (no SC/VSC), and clear air.
+│   ├── bahrain_model_ready.csv     # Added columns: Corrected_LapTime, Full_Throttle_Percentage
+│   ├── barcelona_model_ready.csv   # Added columns: Corrected_LapTime, Min_MidCorner_Speed
+│   └── monaco_model_ready.csv      # Added columns: Corrected_LapTime
+│
+└── /analysis_notebooks/            
+    # Jupyter Notebooks for building the degradation curves and finding the break-even point.
+    ├── 1_degradation_curves.ipynb  # Plots Tyre Age (X) vs Corrected Lap Time (Y)
+    ├── 2_aggression_clustering.ipynb # Groups stints into "Aggressive" vs "Conservative"
+    └── 3_breakeven_threshold.ipynb # Models cumulative time gained vs pit-stop penalty time
